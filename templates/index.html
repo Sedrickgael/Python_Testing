@@ -5,12 +5,18 @@
     <title>GUDLFT Registration</title>
 </head>
 <body>
-    <h1>Welcome to the GUDLFT Registration Portal!</h1>
+    <h1>
+        Welcome to the GUDLFT Registration Portal!</h1>
     Please enter your secretary email to continue:
     <form action="showSummary" method="post">
         <label for="email">Email:</label>
         <input type="email" name="email" id=""/>
         <button type="submit">Enter</button>
     </form>
+    {% if erreur %}
+    <p style="color: red;">Email Incorrect</p>
+    {% endif %}
+    
+    
 </body>
 </html>
