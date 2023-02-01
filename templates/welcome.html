@@ -3,21 +3,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summary | GUDLFT Registration</title>
+    <style>
+        .header {
+    background-color: rgb(173, 230, 203);
+    padding: 20px;
+    text-align: center;
+}
+
+.messages {
+    background-color: lightgray;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.points-available {
+    background-color: lightgreen;
+    padding: 20px;
+    text-align: center;
+}
+
+.competitions {
+    list-style: none;
+    padding: 0;
+}
+
+.competitions li {
+    background-color: lightyellow;
+    padding: 20px;
+    margin: 20px 0;
+}
+a{
+    background-color: #4CAF50;
+    border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+    </style>
 </head>
 <body>
+    <div class="header">
         <h2>Welcome, {{club['email']}} </h2><a href="{{url_for('logout')}}">Logout</a>
+    </div>
 
     {% with messages = get_flashed_messages()%}
     {% if messages %}
-        <ul>
-       {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-       </ul>
+        <div class="messages">
+            <ul>
+               {% for message in messages %}
+                <li>{{message}}</li>
+               {% endfor %}
+            </ul>
+        </div>
     {% endif%}
-    Points available: {{club['points']}}
+
+    <div class="points-available">
+        Points available: {{club['points']}}
+    </div>
+
     <h3>Competitions:</h3>
-    <ul>
+    <ul class="competitions">
         {% for comp in competitions%}
         <li>
             {{comp['name']}}<br />
