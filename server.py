@@ -1,3 +1,4 @@
+import datetime
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 
@@ -26,8 +27,12 @@ def index():
 
 @app.route('/showSummary',methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    try:
+        club = [club for club in clubs if club['email'] == request.form['email']][0]
+        return render_template('welcome.html',club=club,competitions=competitions)
+    except IndexError:
+        erreur = 1
+        return render_template('index.html',erreur=erreur)
 
 
 @app.route('/book/<competition>/<club>')
@@ -45,11 +50,31 @@ def book(competition,club):
 def purchasePlaces():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
-    placesRequired = int(request.form['places'])
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
-    return render_template('welcome.html', club=club, competitions=competitions)
+    competitions_with_valid_date = []
+    competitions_done = []
 
+    for comp in competitions:
+        date_str = str(comp['date'])
+        date_object = datetime.datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+        if date_object > datetime.datetime.now():
+            comp['date'] = date_object
+            competitions_with_valid_date.append(comp)
+        else:
+            competitions_done.append(comp)
+
+    places = request.form.get('places')
+
+    if places:
+        placesRequired = int(places)
+        if (placesRequired <= int(competition['numberOfPlaces']) and placesRequired > 0) and (int(club['points'])>0 and (int(club['points']) >= placesRequired and placesRequired < 13)):
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+            club['points'] = int(club['points']) - placesRequired
+            flash('Felicitation! vous venez de reserver {} places '.format(placesRequired))
+        else:
+            flash('echec lors de la reservation de {} places !'.format(placesRequired))
+    else:
+        flash('Aucune place n\'a été sélectionnée!')
+    return render_template('welcome.html', club=club, competitions=competitions_with_valid_date, competition_done=competitions_done)
 
 # TODO: Add route for points display
 

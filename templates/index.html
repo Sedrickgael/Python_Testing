@@ -12,5 +12,8 @@
         <input type="email" name="email" id=""/>
         <button type="submit">Enter</button>
     </form>
+    {% if erreur %}
+    <p style="color: red;">Email Incorrect</p>
+    {% endif %}
 </body>
 </html>
