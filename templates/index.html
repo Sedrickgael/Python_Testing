@@ -12,5 +12,22 @@
         <input type="email" name="email" id=""/>
         <button type="submit">Enter</button>
     </form>
+    {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    <script>
+        setTimeout(function() {
+          var flashMessage = document.getElementById('flash-message');
+          if (flashMessage) {
+            flashMessage.style.display = 'none';
+          }
+        }, 2); 
+      </script>
+  {% endif %}
+{% endwith %}
 </body>
 </html>
